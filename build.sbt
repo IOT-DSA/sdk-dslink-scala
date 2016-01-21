@@ -21,6 +21,11 @@ scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation", "-Xlint",
 
 run in Compile <<= Defaults.runTask(fullClasspath in Compile, mainClass in (Compile, run), runner in (Compile, run))
 
+// scoverage options
+coverageExcludedPackages := "org\\.dsa\\.iot\\.netty\\.*"
+coverageMinimum := 80
+coverageFailOnMinimum := true
+
 // publishing options
 
 publishMavenStyle := true
@@ -58,7 +63,9 @@ libraryDependencies ++= Seq(
   "org.slf4j"           % "slf4j-log4j12"           % "1.6.1",    		
   "org.iot-dsa"         % "dslink"                  % DSA_VERSION
   		exclude("org.slf4j", "*")
-  		exclude("org.iot-dsa", "logging"),
+  		exclude("org.iot-dsa", "logging")
+  		exclude("io.netty", "*"),
+  "io.netty"            % "netty-all"               % "4.0.33.Final",
   "io.reactivex"       %% "rxscala"                 % "0.25.1",
   "org.scalatest"      %% "scalatest"               % "2.2.1"         % "test",
   "org.scalacheck"     %% "scalacheck"              % "1.12.1"        % "test",
