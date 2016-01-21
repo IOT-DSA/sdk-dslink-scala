@@ -1,12 +1,11 @@
-package org.dsa.iot.util
+package org.dsa.iot
 
-import org.dsa.iot.AbstractSpec
 import org.dsa.iot.dslink.node.value.{ Value, ValueType }
 
 /**
- * ValueUtils test suite.
+ * Value utilities test suite.
  */
-class ValueUtilsSpec extends AbstractSpec with ValueUtils {
+class ValueSupportSpec extends AbstractSpec {
 
   "list<->JsonArray conversion" should {
     "handle simple lists" in forAll(gen.scalarLists) { x =>
@@ -113,5 +112,5 @@ class ValueUtilsSpec extends AbstractSpec with ValueUtils {
       val v = new Value(null.asInstanceOf[String])
       resolveUnknown(v) shouldBe null.asInstanceOf[Any]
     }
-  }
+  }  
 }

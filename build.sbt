@@ -61,5 +61,6 @@ libraryDependencies ++= Seq(
   		exclude("org.iot-dsa", "logging"),
   "io.reactivex"       %% "rxscala"                 % "0.25.1",
   "org.scalatest"      %% "scalatest"               % "2.2.1"         % "test",
-  "org.scalacheck"     %% "scalacheck"              % "1.12.1"        % "test"  
+  "org.scalacheck"     %% "scalacheck"              % "1.12.1"        % "test",
+  "org.mockito"         % "mockito-core"            % "1.10.19"       % "test"
 )

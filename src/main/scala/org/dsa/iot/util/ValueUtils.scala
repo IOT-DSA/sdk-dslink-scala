@@ -110,7 +110,7 @@ trait ValueUtils {
   /**
    * Resolves the value with unknown type.
    */
-  private[util] def resolveUnknown(v: Value): Any = Option(v.getBool)
+  private[iot] def resolveUnknown(v: Value): Any = Option(v.getBool)
     .orElse(Option(v.getNumber))
     .orElse(Option(v.getBinary))
     .orElse(Option(v.getString))
