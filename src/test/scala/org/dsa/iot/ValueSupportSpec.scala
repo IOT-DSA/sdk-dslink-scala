@@ -45,6 +45,26 @@ class ValueSupportSpec extends AbstractSpec {
       valueToFloat(v) shouldBe x.floatValue
       valueToAny(v) shouldBe x
     }
+    "handle integers" in forAll { (x: Int) =>
+      val v = intToValue(x)
+      v.getType shouldBe ValueType.NUMBER
+      valueToInt(v) shouldBe x
+    }
+    "handle longs" in forAll { (x: Long) =>
+      val v = longToValue(x)
+      v.getType shouldBe ValueType.NUMBER
+      valueToLong(v) shouldBe x
+    }
+    "handle doubles" in forAll { (x: Double) =>
+      val v = doubleToValue(x)
+      v.getType shouldBe ValueType.NUMBER
+      valueToDouble(v) shouldBe x
+    }
+    "handle floats" in forAll { (x: Float) =>
+      val v = floatToValue(x)
+      v.getType shouldBe ValueType.NUMBER
+      valueToFloat(v) shouldBe x
+    }
     "handle strings" in forAll { (x: String) =>
       val v = anyToValue(x)
       v.getType shouldBe ValueType.STRING

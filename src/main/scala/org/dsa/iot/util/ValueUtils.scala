@@ -46,12 +46,12 @@ trait ValueUtils {
    */
   def anyToValue(value: Any): Value = value match {
     case null                => null
-    case x: java.lang.Number => new Value(x)
-    case x: Boolean          => new Value(x)
-    case x: String           => new Value(x)
-    case x: Array[Byte]      => new Value(x)
-    case x: Map[_, _]        => new Value(mapToJsonObject(x.asInstanceOf[Map[String, _]]))
-    case x: List[_]          => new Value(listToJsonArray(x))
+    case x: java.lang.Number => numberToValue(x)
+    case x: Boolean          => booleanToValue(x)
+    case x: String           => stringToValue(x)
+    case x: Array[Byte]      => binaryToValue(x)
+    case x: Map[_, _]        => mapToValue(x.asInstanceOf[Map[String, _]]) 
+    case x: List[_]          => listToValue(x)
     case x @ _               => new Value(x.toString)
   }
 
@@ -106,6 +106,17 @@ trait ValueUtils {
   implicit def valueToString(v: Value): String = v.getString
   implicit def valueToMap(v: Value): Map[String, _] = jsonObjectToMap(v.getMap)
   implicit def valueToList(v: Value): List[_] = jsonArrayToList(v.getArray)
+  
+  implicit def booleanToValue(x: Boolean) = new Value(x)
+  implicit def numberToValue(x: Number) = new Value(x)
+  implicit def intToValue(x: Int) = numberToValue(x)
+  implicit def longToValue(x: Long) = numberToValue(x)
+  implicit def doubleToValue(x: Double) = numberToValue(x)
+  implicit def floatToValue(x: Float) = numberToValue(x)
+  implicit def binaryToValue(x: Array[Byte]) = new Value(x)
+  implicit def stringToValue(x: String) = new Value(x)
+  implicit def mapToValue(x: Map[String, _]) = new Value(mapToJsonObject(x))
+  implicit def listToValue(x: List[_]) = new Value(listToJsonArray(x))
 
   /**
    * Resolves the value with unknown type.
