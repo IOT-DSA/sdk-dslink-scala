@@ -22,7 +22,7 @@ scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation", "-Xlint",
 run in Compile <<= Defaults.runTask(fullClasspath in Compile, mainClass in (Compile, run), runner in (Compile, run))
 
 // scoverage options
-coverageExcludedPackages := "org\\.dsa\\.iot\\.netty\\.*"
+coverageExcludedPackages := "org\\.dsa\\.iot\\.netty\\.*;org\\.dsa\\.iot\\.examples\\.*;.*DSAConnector;.*DSAEventListener"
 coverageMinimum := 80
 coverageFailOnMinimum := true
 
@@ -60,6 +60,7 @@ pomExtra := (
   </developers>)
 	
 libraryDependencies ++= Seq(
+  "com.typesafe"        % "config"                  % "1.3.0",
   "org.slf4j"           % "slf4j-log4j12"           % "1.6.1",    		
   "org.iot-dsa"         % "dslink"                  % DSA_VERSION
   		exclude("org.slf4j", "*")
