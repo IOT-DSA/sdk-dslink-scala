@@ -15,7 +15,7 @@ class ActionSupportSpec extends AbstractSpec {
     "create new actions with default attributes" in {
       var result = ""
       val handler = (event: ActionResult) => { result = "done" }
-      val a = action(handler)
+      val a = createAction(handler)
       jsonArrayToList(a.getParams) shouldBe empty
       jsonArrayToList(a.getColumns) shouldBe empty
       a.getPermission shouldBe Permission.READ
@@ -29,7 +29,7 @@ class ActionSupportSpec extends AbstractSpec {
         perm <- Permission.values
         rt <- ResultType.values
         hid <- List(false, true)
-        a = action(
+        a = createAction(
           handler = (event: ActionResult) => {},
           permission = perm,
           resultType = rt,
@@ -41,7 +41,7 @@ class ActionSupportSpec extends AbstractSpec {
       }
     }
     "create new actions with parameters and results" in {
-      val a = action(
+      val a = createAction(
         parameters = List(new Parameter("a", ValueType.STRING), new Parameter("b", ValueType.NUMBER)),
         results = List(new Parameter("x", ValueType.BOOL), new Parameter("y", ValueType.BINARY)),
         handler = (event: ActionResult) => {})

@@ -2,7 +2,6 @@ package org.dsa
 
 import scala.collection.JavaConverters.{ asScalaSetConverter, mapAsScalaMapConverter, seqAsJavaListConverter }
 
-import org.dsa.iot.Having
 import org.dsa.iot.dslink.node.{ Node, NodeBuilder, Permission, Writable }
 import org.dsa.iot.dslink.node.actions.{ Action, ActionResult, EditorType, Parameter, ResultType }
 import org.dsa.iot.dslink.node.value.{ Value, ValueType }
@@ -77,21 +76,24 @@ package object iot extends ValueUtils {
 
     def action(action: Action): NodeBuilder = nb having (_.setAction(action))
 
-    def action(handler: ActionHandler, permission: Permission = Permission.READ): NodeBuilder =
-      action(new Action(permission, new Handler[ActionResult] {
-        def handle(event: ActionResult) = handler(event)
-      }))
+    def action(handler: ActionHandler,
+               parameters: Iterable[Parameter] = Nil,
+               results: Iterable[Parameter] = Nil,
+               permission: Permission = Permission.READ,
+               resultType: ResultType = ResultType.VALUES,
+               hidden: Boolean = false): NodeBuilder =
+      action(createAction(handler, parameters, results, permission, resultType, hidden))
   }
 
   /**
    * Creates a new action.
    */
-  def action(handler: ActionHandler,
-             parameters: Iterable[Parameter] = Nil,
-             results: Iterable[Parameter] = Nil,
-             permission: Permission = Permission.READ,
-             resultType: ResultType = ResultType.VALUES,
-             hidden: Boolean = false): Action = {
+  def createAction(handler: ActionHandler,
+                   parameters: Iterable[Parameter] = Nil,
+                   results: Iterable[Parameter] = Nil,
+                   permission: Permission = Permission.READ,
+                   resultType: ResultType = ResultType.VALUES,
+                   hidden: Boolean = false): Action = {
     val a = new Action(permission, new Handler[ActionResult] {
       def handle(event: ActionResult) = handler(event)
     })
