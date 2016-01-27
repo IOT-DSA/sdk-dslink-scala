@@ -1,12 +1,10 @@
 package org.dsa.iot.examples
 
-import java.io.{ File, PrintWriter }
 import java.util.concurrent.CountDownLatch
 
 import scala.collection.JavaConverters.mapAsScalaMapConverter
-import scala.io.Source
 
-import org.dsa.iot.{ DSAConnector, DSAEventListener, LinkMode, RichNodeBuilder }
+import org.dsa.iot.{ DSAEventListener, LinkMode, RichNodeBuilder }
 import org.dsa.iot.{ intToValue, valueToInt }
 import org.dsa.iot.dslink.DSLink
 import org.dsa.iot.dslink.methods.requests.{ InvokeRequest, ListRequest }
@@ -24,19 +22,9 @@ import org.dsa.iot.dslink.util.handler.Handler
 object DSAConnectorTest extends App {
   import org.dsa.iot.LinkMode._
 
-  val DEFAULT_BROKER_URL = "http://localhost:8080/conn"
-
-  private val brokerUrl = if (args.length < 1) {
-    println(s"Broker URL not specified, using the default one: $DEFAULT_BROKER_URL")
-    DEFAULT_BROKER_URL
-  } else {
-    println(s"User Broker URL: ${args(0)}")
-    args(0)
-  }
-
   {
     println("---------------------------------------------\nTesting Responder mode")
-    val connector = createConnector
+    val connector = createConnector(args)
     println("Adding connection listener")
     connector.addListener(new DSAEventListener {
       override def onResponderConnected(link: DSLink) = println("responder link connected @ " + link.getPath)
@@ -57,7 +45,7 @@ object DSAConnectorTest extends App {
 
   {
     println("---------------------------------------------\nTesting Requester mode")
-    val connector = createConnector
+    val connector = createConnector(args)
     println("Adding connection listener")
     connector.addListener(new DSAEventListener {
       override def onRequesterConnected(link: DSLink) = println("requester link connected: " + link.isConnected)
@@ -88,7 +76,7 @@ object DSAConnectorTest extends App {
 
   {
     println("---------------------------------------------\nTesting Dual mode")
-    val connector = createConnector
+    val connector = createConnector(args)
     println("Adding connection listener")
     connector.addListener(new DSAEventListener {
       override def onResponderConnected(link: DSLink) = println("responder link connected @ " + link.getPath)
@@ -123,29 +111,4 @@ object DSAConnectorTest extends App {
   }
 
   System.exit(0)
-
-  /**
-   * Creates a new DSAConnector.
-   */
-  private def createConnector = {
-    val dslinkJson = copyDslinkJson
-    val nodesJsonPath = dslinkJson.getParent + "/nodes.json"
-    DSAConnector("-b", brokerUrl, "-d", dslinkJson.getPath, "-n", nodesJsonPath)
-  }
-
-  /**
-   * Copies the default dslink.json template to a temporary file.
-   */
-  private def copyDslinkJson = {
-    val source = Source.fromInputStream(getClass.getResourceAsStream("/examples/dslink.json.template"))
-
-    val dslinkFile = File.createTempFile("dslink", ".json")
-    dslinkFile.deleteOnExit
-
-    val target = new PrintWriter(dslinkFile)
-    source.getLines foreach target.println
-    target.close
-
-    dslinkFile
-  }
 }
