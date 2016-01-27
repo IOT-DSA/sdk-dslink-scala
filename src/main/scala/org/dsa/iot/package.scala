@@ -1,18 +1,23 @@
 package org.dsa
 
 import scala.collection.JavaConverters.{ asScalaSetConverter, mapAsScalaMapConverter, seqAsJavaListConverter }
-
 import org.dsa.iot.dslink.node.{ Node, NodeBuilder, Permission, Writable }
 import org.dsa.iot.dslink.node.actions.{ Action, ActionResult, EditorType, Parameter, ResultType }
 import org.dsa.iot.dslink.node.value.{ Value, ValueType }
 import org.dsa.iot.dslink.util.handler.Handler
 import org.dsa.iot.dslink.util.json.JsonObject
 import org.dsa.iot.util.ValueUtils
+import java.util.Date
 
 /**
  * DSA helper types and functions.
  */
 package object iot extends ValueUtils {
+  
+  /**
+   * The data type emitted by the DSA async calls, which includes the path, the timestamp, and the actual value.
+   */
+  type TimedValue = (String, Date, Any)
 
   /**
    * Function passed as action handler.
