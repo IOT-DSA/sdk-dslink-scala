@@ -28,11 +28,11 @@ package object iot extends ValueUtils {
    * Extension to Node class which provides automatic Java->Scala collection converters.
    */
   implicit class RichNode(val node: Node) extends AnyVal {
-    def attributes = node.getAttributes.asScala.toMap mapValues valueToAny
-    def configurations = node.getConfigurations.asScala.toMap mapValues valueToAny
+    def attributes = Option(node.getAttributes).map(_.asScala.toMap) getOrElse Map.empty mapValues valueToAny
+    def configurations = Option(node.getConfigurations).map(_.asScala.toMap) getOrElse Map.empty mapValues valueToAny
     def interfaces = Option(node.getInterfaces).map(_.asScala.toSet) getOrElse Set.empty
-    def roConfiguration = node.getRoConfigurations.asScala.toMap mapValues valueToAny
-    def children = node.getChildren.asScala.toMap
+    def roConfiguration = Option(node.getRoConfigurations).map(_.asScala.toMap) getOrElse Map.empty mapValues valueToAny
+    def children = Option(node.getChildren).map(_.asScala.toMap) getOrElse Map.empty
   }
 
   /**
@@ -127,7 +127,10 @@ package object iot extends ValueUtils {
     def placeHolder(value: String) = param having (_.setPlaceHolder(value))
     def meta(value: JsonObject): Parameter = param having (_.setMetaData(value))
     def meta(value: Map[String, Any]): Parameter = meta(mapToJsonObject(value))
+    def ~(another: Parameter): List[Parameter] = param :: another :: Nil
   }
+  
+  implicit def toList(param: Parameter) = List(param)
 
   /**
    * Creates a new ENUM value type from Scala enumeration.
