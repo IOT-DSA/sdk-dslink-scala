@@ -2,7 +2,6 @@ package org.dsa.iot
 
 import scala.collection.JavaConverters.mapAsScalaMapConverter
 import scala.concurrent.{ ExecutionContext, Future, Promise }
-
 import org.dsa.iot.dslink.link.{ Requester, Responder }
 import org.dsa.iot.dslink.methods.{ Response, StreamState }
 import org.dsa.iot.dslink.methods.requests.{ InvokeRequest, ListRequest, RemoveRequest, SetRequest }
@@ -11,9 +10,9 @@ import org.dsa.iot.dslink.node.Node
 import org.dsa.iot.dslink.node.value.{ SubscriptionValue, Value }
 import org.dsa.iot.dslink.util.handler.Handler
 import org.slf4j.LoggerFactory
-
 import rx.lang.scala.{ Observable, Observer, Subscription }
 import rx.lang.scala.subjects.ReplaySubject
+import scala.util.Try
 
 /**
  * Provides methods for executing DSA commands.
@@ -147,7 +146,7 @@ object DSAHelper {
   def getNodeValue(path: String)(implicit requester: Requester, ec: ExecutionContext): Future[TimedValue] =
     watch(path).take(1).toBlocking.toFuture map { event =>
       val value = valueToAny(event.getValue)
-      val time = new java.util.Date(event.getValue.getTime)
+      val time = Try(new java.util.Date(event.getValue.getTime)).getOrElse(new java.util.Date)
       (event.getPath, time, value)
     }
 
