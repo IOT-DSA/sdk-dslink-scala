@@ -1,4 +1,8 @@
 # sdk-dslink-scala
+
+![alt tag](https://travis-ci.org/IOT-DSA/sdk-dslink-scala.svg?branch=master)
+![Coverage Status](https://coveralls.io/repos/github/IOT-DSA/sdk-dslink-scala/badge.svg)
+
 DSLink Scala SDK
 
 * Provides DSAConnector and DSAConnection classes as a communication facade.
