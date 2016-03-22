@@ -58,6 +58,12 @@ pomExtra := (
       <url>http://uralian.com</url>
     </developer>
   </developers>)
+
+pgpSecretRing := file("local.secring.gpg")
+
+pgpPublicRing := file("local.pubring.gpg")
+
+// dependencies
 	
 libraryDependencies ++= Seq(
   "com.typesafe"        % "config"                  % "1.3.0",
