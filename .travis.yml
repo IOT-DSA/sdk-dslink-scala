@@ -2,6 +2,7 @@ language: scala
 
 scala:
 - 2.10.5
+- 2.11.7
 
 jdk:
 - oraclejdk8
@@ -13,7 +14,7 @@ notifications:
 
 install: /bin/true
 
-script: sbt clean test
+script: sbt +clean +test
 
 cache:
   directories:
@@ -29,4 +30,4 @@ before_install:
 - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in ci/credentials.sbt.enc -out local.credentials.sbt -d
 
 after_success:
-  - "[[ $TRAVIS_BRANCH == \"master\" ]] && { sbt publishSigned; };"
+  - "[[ $TRAVIS_BRANCH == \"master\" ]] && { sbt +publishSigned; };"

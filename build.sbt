@@ -1,9 +1,7 @@
 // properties
 
 val APP_VERSION = "0.2.0-SNAPSHOT"
-
-val SCALA_VERSION = "2.10.5"
-
+val SCALA_VERSION = "2.11.7"
 val DSA_VERSION = "0.13.0"
 
 // settings
@@ -16,8 +14,12 @@ version := APP_VERSION
 
 scalaVersion := SCALA_VERSION
 
+crossScalaVersions := Seq("2.10.5", "2.11.7")
+
 scalacOptions ++= Seq("-feature", "-unchecked", "-deprecation", "-Xlint", 
 	"-Ywarn-dead-code", "-language:_", "-target:jvm-1.7", "-encoding", "UTF-8")
+
+scalacOptions in (Compile, doc) ++= Seq("-no-link-warnings")
 
 run in Compile <<= Defaults.runTask(fullClasspath in Compile, mainClass in (Compile, run), runner in (Compile, run))
 
