@@ -91,7 +91,7 @@ class DSAConnector private (args: Iterable[String]) {
   /**
    * Connects to the DSA broker and returns the DSAConnection instance.
    * @param linkMode the link mode (REQUESTER, RESPONDER, or DUAL).
-   * @returns an instance of DSAConnection.
+   * @return an instance of DSAConnection.
    * @throws IllegalStateException if the connection has already been started.
    */
   def start(linkMode: LinkMode = DUAL): DSAConnection = synchronized {
