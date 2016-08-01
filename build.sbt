@@ -2,7 +2,7 @@
 
 val APP_VERSION = "0.3.0-SNAPSHOT"
 val SCALA_VERSION = "2.11.7"
-val DSA_VERSION = "0.13.0"
+val DSA_VERSION = "0.15.0"
 
 // settings
 
