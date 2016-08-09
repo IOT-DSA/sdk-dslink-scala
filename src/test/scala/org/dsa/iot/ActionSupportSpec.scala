@@ -102,8 +102,8 @@ class ActionSupportSpec extends AbstractSpec {
 
   "RichActionResult" should {
     val node = new Node("a", null, null)
-    val json = mapToJsonObject("params" -> mapToJsonObject("a" -> "abc", "x" -> 123, "y" -> true,
-      "z" -> "1234".getBytes, "v" -> listToJsonArray(1, 2, 3), "w" -> mapToJsonObject("c" -> "C")))
+    val json = jsonObject("params" -> jsonObject("a" -> "abc", "x" -> 123, "y" -> true,
+      "z" -> "1234".getBytes, "v" -> jsonArray(1, 2, 3), "w" -> jsonObject("c" -> "C")))
     val ar = new ActionResult(node, json)
 
     "extract parameters without validation" in {

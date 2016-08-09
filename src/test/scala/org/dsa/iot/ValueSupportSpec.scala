@@ -14,6 +14,12 @@ class ValueSupportSpec extends AbstractSpec {
     "handle nested lists and maps" in forAll(gen.anyLists) { x =>
       jsonArrayToList(listToJsonArray(x)) shouldBe x
     }
+    "handle lists with Value items" in forAll(gen.scalarLists) { x =>
+      val y = jsonArrayToList(listToJsonArray(x map anyToValue))
+      (y zip x) foreach {
+        case (a, b) => a should equal(b)
+      }
+    }
   }
 
   "map<->JsonObject conversion" should {
@@ -22,6 +28,13 @@ class ValueSupportSpec extends AbstractSpec {
     }
     "handle nested lists and maps" in forAll(gen.anyMaps) { x =>
       jsonObjectToMap(mapToJsonObject(x)) shouldBe x
+    }
+    "handle maps with Value items" in forAll(gen.scalarMaps) { x =>
+      val y = jsonObjectToMap(mapToJsonObject(x mapValues anyToValue))
+      x.size shouldBe y.size
+      val z = x foreach {
+        case (k, v1) => y(k) should equal(v1)
+      }
     }
   }
 
@@ -132,5 +145,5 @@ class ValueSupportSpec extends AbstractSpec {
       val v = new Value(null.asInstanceOf[String])
       resolveUnknown(v) shouldBe null.asInstanceOf[Any]
     }
-  }  
+  }
 }
