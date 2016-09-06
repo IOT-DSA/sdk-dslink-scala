@@ -45,15 +45,17 @@ trait ValueUtils {
    * Converts a value into Value object.
    */
   def anyToValue(value: Any): Value = value match {
-    case null                => null
-    case x: Value            => x
-    case x: java.lang.Number => numberToValue(x)
-    case x: Boolean          => booleanToValue(x)
-    case x: String           => stringToValue(x)
-    case x: Array[Byte]      => binaryToValue(x)
-    case x: Map[_, _]        => mapToValue(x.asInstanceOf[Map[String, _]])
-    case x: Seq[_]           => listToValue(x)
-    case x @ _               => new Value(x.toString)
+    case null                   => null
+    case x: Value               => x
+    case x: java.lang.Number    => numberToValue(x)
+    case x: Boolean             => booleanToValue(x)
+    case x: String              => stringToValue(x)
+    case x: Array[Byte]         => binaryToValue(x)
+    case x: Map[_, _]           => mapToValue(x.asInstanceOf[Map[String, _]])
+    case x: java.util.Map[_, _] => mapToValue(x.asScala.toMap.asInstanceOf[Map[String, _]])
+    case x: Seq[_]              => listToValue(x)
+    case x: java.util.List[_]   => listToValue(x.asScala)
+    case x @ _                  => new Value(x.toString)
   }
 
   /**
@@ -61,10 +63,12 @@ trait ValueUtils {
    */
   def listToJsonArray(ls: Seq[_]): JsonArray = {
     val elements = ls map {
-      case x: Value     => valueToAny(x)
-      case x: Seq[_]    => listToJsonArray(x)
-      case x: Map[_, _] => mapToJsonObject(x.asInstanceOf[Map[String, Any]])
-      case x            => x
+      case x: Value               => valueToAny(x)
+      case x: Seq[_]              => listToJsonArray(x)
+      case x: java.util.List[_]   => listToJsonArray(x.asScala)
+      case x: Map[_, _]           => mapToJsonObject(x.asInstanceOf[Map[String, Any]])
+      case x: java.util.Map[_, _] => mapToJsonObject(x.asScala.toMap.asInstanceOf[Map[String, Any]])
+      case x                      => x
     }
     new JsonArray(elements.asJava)
   }
@@ -79,10 +83,12 @@ trait ValueUtils {
    */
   def mapToJsonObject(mp: Map[String, _]): JsonObject = {
     val elements = mp.mapValues {
-      case x: Value     => valueToAny(x).asInstanceOf[Object]
-      case x: Seq[_]    => listToJsonArray(x)
-      case x: Map[_, _] => mapToJsonObject(x.asInstanceOf[Map[String, Any]])
-      case x            => x.asInstanceOf[Object]
+      case x: Value               => valueToAny(x).asInstanceOf[Object]
+      case x: Seq[_]              => listToJsonArray(x)
+      case x: java.util.List[_]   => listToJsonArray(x.asScala)
+      case x: Map[_, _]           => mapToJsonObject(x.asInstanceOf[Map[String, Any]])
+      case x: java.util.Map[_, _] => mapToJsonObject(x.asScala.toMap.asInstanceOf[Map[String, Any]])
+      case x                      => x.asInstanceOf[Object]
     }
     // due to issues with mutability, have to do it the long way instead of elements.toJava
     val m = new java.util.HashMap[String, Object]
