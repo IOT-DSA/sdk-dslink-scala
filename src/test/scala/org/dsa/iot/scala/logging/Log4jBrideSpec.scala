@@ -1,6 +1,6 @@
-package org.dsa.iot.logging
+package org.dsa.iot.scala.logging
 
-import org.dsa.iot.AbstractSpec
+import org.dsa.iot.scala.AbstractSpec
 import org.dsa.iot.dslink.util.log.LogLevel
 
 /**

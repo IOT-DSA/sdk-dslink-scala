@@ -1,4 +1,4 @@
-package org.dsa.iot.examples
+package org.dsa.iot.scala.examples
 
 import java.util.UUID
 
@@ -6,12 +6,13 @@ import scala.collection.JavaConverters.mapAsScalaMapConverter
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration._
 import scala.util.{ Failure, Random, Success, Try }
 
-import org.dsa.iot.{ DSAHelper, LinkMode, RichNodeBuilder, RichValueType }
 import org.dsa.iot.dslink.link.{ Requester, Responder }
+import org.dsa.iot.dslink.methods.responses.InvokeResponse
 import org.dsa.iot.dslink.node.value.ValueType
+import org.dsa.iot.scala.{ DSAHelper, LinkMode, RichNodeBuilder, RichValueType }
 
 import rx.lang.scala.{ Observable, Observer }
 
@@ -30,7 +31,7 @@ object DSAHelperTest extends App {
     testInvoke(requester)
     testListAndWatch(requester)
     testNodes(requester, responder)
-    println("Requester test complete")
+    println("Test complete")
   } finally {
     connector.stop
   }
@@ -43,21 +44,22 @@ object DSAHelperTest extends App {
     val obsCreate = DSAHelper.invoke("/downstream/dataflow/createDataflow", "name" -> flowName1)
     obsCreate.subscribe(new TestObserver(s"createFlow($flowName1)"))
 
-    val flowName2 = UUID.randomUUID().toString
-    val futCreate = DSAHelper.invokeAndWait("/downstream/dataflow/createDataflow", "name" -> flowName2)
-    futCreate.onComplete(testFuture(s"createFlow($flowName2)"))
-
-    val obsExport = obsCreate.flatMap(_ => DSAHelper invoke s"/downstream/dataflow/$flowName1/exportDataflow").share
+    val obsExport = obsCreate.delay(2 seconds).flatMap(_ => DSAHelper invoke s"/downstream/dataflow/$flowName1/exportDataflow")
     obsExport.subscribe(new TestObserver(s"exportFlow($flowName1)"))
-
-    val futDelete = futCreate.flatMap(_ => DSAHelper invokeAndWait s"/downstream/dataflow/$flowName2/deleteDataflow")
-    futDelete.onComplete(testFuture(s"deleteFlow($flowName2)"))
 
     val obsDelete = obsExport.flatMap(_ => DSAHelper invoke s"/downstream/dataflow/$flowName1/deleteDataflow").share
     obsDelete.subscribe(new TestObserver(s"deleteFlow($flowName1)"))
 
+    val flowName2 = UUID.randomUUID().toString
+    val futCreate = DSAHelper.invokeAndWait("/downstream/dataflow/createDataflow", "name" -> flowName2)
+    futCreate.onComplete(testFuture(s"createFlow($flowName2)"))
+    
+    val futDelete = futCreate.map(_ => Thread.sleep(2000)).flatMap(_ => DSAHelper invokeAndWait s"/downstream/dataflow/$flowName2/deleteDataflow")
+    futDelete.onComplete(testFuture(s"deleteFlow($flowName2)"))
+
     waitToComplete(obsDelete)
     waitToComplete(futDelete)
+    Thread.sleep(1000)
   }
 
   def testListAndWatch(implicit requester: Requester) = {
@@ -124,14 +126,23 @@ object DSAHelperTest extends App {
   }
 
   case class TestObserver(name: String) extends Observer[Any] {
-    override def onNext(value: Any) = println(s"OBS [$name] onNext: $value")
-    override def onError(error: Throwable) = Console.err.println(s"OBS [$name] error: $error")
+    override def onNext(value: Any) = println(s"OBS [$name] onNext: ${dump(value)}")
+    override def onError(error: Throwable) = {
+      Console.err.println(s"OBS [$name] error: $error")
+      error.printStackTrace
+    }
     override def onCompleted = println(s"OBS [$name] completed")
   }
 
   def testFuture(name: String): PartialFunction[Try[_], Unit] = {
-    case Success(x) => println(s"FUT [$name] completed: $x")
+    case Success(x) => println(s"FUT [$name] completed: ${dump(x)}")
     case Failure(e) => println(s"FUT [$name] error: $e")
+  }
+
+  private def dump(x: Any) = x match {
+    case null                => "null"
+    case rsp: InvokeResponse => s"InvokeResponse(${rsp.getPath}, ${rsp.getState})"
+    case _                   => x.toString
   }
 
   private def waitToComplete(obs: Observable[_]) = obs.toBlocking.toList

@@ -1,4 +1,4 @@
-package org.dsa.iot.examples
+package org.dsa.iot.scala.examples
 
 import org.dsa.iot.dslink.DSLinkHandler
 

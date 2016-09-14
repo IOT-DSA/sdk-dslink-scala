@@ -1,4 +1,4 @@
-package org.dsa.iot
+package org.dsa.iot.scala
 
 import java.io.{ File, PrintWriter }
 

@@ -24,7 +24,7 @@ scalacOptions in (Compile, doc) ++= Seq("-no-link-warnings")
 run in Compile <<= Defaults.runTask(fullClasspath in Compile, mainClass in (Compile, run), runner in (Compile, run))
 
 // scoverage options
-coverageExcludedPackages := "org\\.dsa\\.iot\\.netty\\.*;org\\.dsa\\.iot\\.examples\\.*;.*DSAConnector;.*DSAEventListener"
+coverageExcludedPackages := "org\\.dsa\\.iot\\.scala\\.netty\\.*;org\\.dsa\\.iot\\.scala\\.examples\\.*;.*DSAConnector;.*DSAEventListener"
 coverageMinimum := 80
 coverageFailOnMinimum := true
 

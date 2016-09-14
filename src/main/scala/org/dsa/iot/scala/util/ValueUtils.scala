@@ -1,4 +1,4 @@
-package org.dsa.iot.util
+package org.dsa.iot.scala.util
 
 import scala.collection.JavaConverters.{ asScalaBufferConverter, mapAsScalaMapConverter, seqAsJavaListConverter }
 

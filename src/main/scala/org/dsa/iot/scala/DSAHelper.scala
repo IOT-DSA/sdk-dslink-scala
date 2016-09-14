@@ -1,4 +1,4 @@
-package org.dsa.iot
+package org.dsa.iot.scala
 
 import scala.collection.JavaConverters.mapAsScalaMapConverter
 import scala.concurrent.{ ExecutionContext, Future, Promise }

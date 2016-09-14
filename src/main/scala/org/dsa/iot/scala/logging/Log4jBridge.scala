@@ -1,4 +1,4 @@
-package org.dsa.iot.logging
+package org.dsa.iot.scala.logging
 
 import java.io.File
 

@@ -1,11 +1,11 @@
-package org.dsa.iot.examples
+package org.dsa.iot.scala.examples
 
 import java.util.concurrent.CountDownLatch
 
 import scala.collection.JavaConverters.mapAsScalaMapConverter
 
-import org.dsa.iot.{ DSAEventListener, LinkMode, RichNodeBuilder }
-import org.dsa.iot.{ intToValue, valueToInt }
+import org.dsa.iot.scala.{ DSAEventListener, LinkMode, RichNodeBuilder }
+import org.dsa.iot.scala.{ intToValue, valueToInt }
 import org.dsa.iot.dslink.DSLink
 import org.dsa.iot.dslink.methods.requests.{ InvokeRequest, ListRequest }
 import org.dsa.iot.dslink.methods.responses.{ InvokeResponse, ListResponse }
@@ -20,7 +20,7 @@ import org.dsa.iot.dslink.util.handler.Handler
  * Demonstrates connecting to the broker and doing basic operations.
  */
 object DSAConnectorTest extends App {
-  import org.dsa.iot.LinkMode._
+  import org.dsa.iot.scala.LinkMode._
 
   {
     println("---------------------------------------------\nTesting Responder mode")

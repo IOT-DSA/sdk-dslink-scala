@@ -1,8 +1,8 @@
-package org.dsa.iot.netty
+package org.dsa.iot.scala.netty
 
 import scala.collection.JavaConverters.mapAsJavaMapConverter
 
-import org.dsa.iot.AbstractSpec
+import org.dsa.iot.scala.AbstractSpec
 import org.dsa.iot.dslink.connection.NetworkClient
 import org.dsa.iot.dslink.util.URLInfo
 import org.dsa.iot.dslink.util.http.WsClient
