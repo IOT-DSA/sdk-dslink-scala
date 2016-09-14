@@ -1,12 +1,12 @@
-package org.dsa.iot
+package org.dsa.iot.scala
 
 import java.util.concurrent.CountDownLatch
 import scala.util.Try
 import org.dsa.iot.dslink.{ DSLink, DSLinkFactory, DSLinkHandler }
 import org.dsa.iot.dslink.provider.{ HttpProvider, WsProvider }
 import org.dsa.iot.dslink.util.log.LogManager
-import org.dsa.iot.logging.Log4jBridge
-import org.dsa.iot.netty.{ CustomHttpProvider, CustomWsProvider }
+import org.dsa.iot.scala.logging.Log4jBridge
+import org.dsa.iot.scala.netty.{ CustomHttpProvider, CustomWsProvider }
 import org.slf4j.LoggerFactory
 import com.typesafe.config.ConfigFactory
 import org.dsa.iot.dslink.DSLinkProvider

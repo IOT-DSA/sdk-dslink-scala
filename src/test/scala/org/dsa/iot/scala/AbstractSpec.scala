@@ -1,6 +1,6 @@
-package org.dsa.iot
+package org.dsa.iot.scala
 
-import scala.collection.JavaConverters.{ mapAsJavaMapConverter, seqAsJavaListConverter }
+import scala.collection.JavaConverters._
 
 import org.dsa.iot.dslink.node.value.Value
 import org.dsa.iot.dslink.util.json.{ JsonArray, JsonObject }
@@ -23,7 +23,9 @@ trait AbstractSpec extends Suite
     val ids = Gen.identifier.map(_.take(10))
     val scalars = Gen.oneOf(arbitrary[Number], arbitrary[Boolean], arbitrary[String], arbitrary[Array[Byte]])
     val scalarLists = Gen.resize(10, Gen.listOf(scalars))
+    val scalarJavaLists = scalarLists.map(_.asJava)
     val scalarMaps = Gen.resize(10, Gen.mapOf(Gen.zip(ids, scalars)))
+    val scalarJavaMaps = scalarMaps.map(_.asJava)
     val anyLists = Gen.resize(10, Gen.listOf(Gen.oneOf(scalars, scalarLists, scalarMaps)))
     val anyMaps = Gen.resize(10, Gen.mapOf(Gen.zip(ids, Gen.oneOf(scalars, scalarLists, scalarMaps))))
     val any = Gen.oneOf(scalars, anyLists, anyMaps)

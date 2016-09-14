@@ -1,4 +1,4 @@
-package org.dsa.iot.netty
+package org.dsa.iot.scala.netty
 
 import java.util.Map
 

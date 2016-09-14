@@ -1,4 +1,4 @@
-package org.dsa.iot
+package org.dsa.iot.scala
 
 import scala.collection.JavaConverters.collectionAsScalaIterableConverter
 
@@ -40,9 +40,16 @@ class ActionSupportSpec extends AbstractSpec {
         a.isHidden shouldBe hid
       }
     }
+    "create action with one parameter" in {
+      val a = createAction(
+        parameters = new Parameter("a", ValueType.STRING),
+        handler = (event: ActionResult) => {})
+      a.parameters shouldBe List(Map("name" -> "a", "type" -> "string"))
+      a.results shouldBe empty
+    }
     "create new actions with parameters and results" in {
       val a = createAction(
-        parameters = List(new Parameter("a", ValueType.STRING), new Parameter("b", ValueType.NUMBER)),
+        parameters = new Parameter("a", ValueType.STRING) ~ new Parameter("b", ValueType.NUMBER),
         results = List(new Parameter("x", ValueType.BOOL), new Parameter("y", ValueType.BINARY)),
         handler = (event: ActionResult) => {})
       a.parameters shouldBe List(Map("name" -> "a", "type" -> "string"), Map("name" -> "b", "type" -> "number"))

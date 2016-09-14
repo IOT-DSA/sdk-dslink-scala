@@ -1,4 +1,4 @@
-package org.dsa.iot
+package org.dsa.iot.scala
 
 import org.dsa.iot.dslink.link.Linkable
 import org.dsa.iot.dslink.node.{ Node, SubscriptionManager, Writable }
@@ -25,6 +25,7 @@ class NodeSupportSpec extends AbstractSpec with MockitoSugar {
       (builder display "full name" build).getDisplayName shouldBe "full name"
     }
     "get/set attributes" in {
+      builder.build.attributes shouldBe Map.empty
       val attrs = Map("a" -> 1, "b" -> List(3, 4), "c" -> true)
       (builder attributes (attrs.toSeq: _*) build).attributes shouldBe attrs
     }
@@ -32,10 +33,12 @@ class NodeSupportSpec extends AbstractSpec with MockitoSugar {
       (builder interfaces (ifaces: _*) build).interfaces shouldBe ifaces.toSet
     }
     "get/set config" in {
+      builder.build.configurations shouldBe Map.empty
       val config = Map("a" -> "abc", "b" -> Map("x" -> 4, "y" -> "z"))
       (builder config (config.toSeq: _*) build).configurations shouldBe config
     }
     "get/set roConfig" in {
+      builder.build.roConfiguration shouldBe Map.empty
       val roConfig = Map("a" -> "abc", "b" -> Map("x" -> 4, "y" -> "z"))
       (builder roConfig (roConfig.toSeq: _*) build).roConfiguration shouldBe roConfig
     }
@@ -74,6 +77,8 @@ class NodeSupportSpec extends AbstractSpec with MockitoSugar {
       result shouldBe 5
     }
     "get children" in {
+      node.children shouldBe Map.empty
+      
       val child1 = node createChild "child1" build
       val child2 = node createChild "child2" build
 

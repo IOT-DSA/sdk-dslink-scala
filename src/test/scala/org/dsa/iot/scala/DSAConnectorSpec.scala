@@ -1,4 +1,4 @@
-package org.dsa.iot
+package org.dsa.iot.scala
 
 import org.dsa.iot.dslink.{ DSLink, DSLinkProvider }
 import org.dsa.iot.dslink.link.{ Requester, Responder }

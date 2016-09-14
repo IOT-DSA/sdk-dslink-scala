@@ -1,6 +1,7 @@
-package org.dsa.iot
+package org.dsa.iot.scala
 
 import org.dsa.iot.dslink.node.value.{ Value, ValueType }
+import scala.collection.JavaConverters._
 
 /**
  * Value utilities test suite.
@@ -20,6 +21,14 @@ class ValueSupportSpec extends AbstractSpec {
         case (a, b) => a should equal(b)
       }
     }
+    "handle lists with java list items" in forAll(gen.scalarJavaLists) { x =>
+      val y = x.asScala.toList
+      jsonArrayToList(listToJsonArray(List(x))) shouldBe jsonArrayToList(listToJsonArray(List(y))) 
+    }
+    "handle lists with java map items" in forAll(gen.scalarJavaMaps) { x =>
+      val y = x.asScala.toMap
+      jsonArrayToList(listToJsonArray(List(x))) shouldBe jsonArrayToList(listToJsonArray(List(y))) 
+    }
   }
 
   "map<->JsonObject conversion" should {
@@ -35,6 +44,14 @@ class ValueSupportSpec extends AbstractSpec {
       val z = x foreach {
         case (k, v1) => y(k) should equal(v1)
       }
+    }
+    "handle maps with java list items" in forAll(gen.scalarJavaLists) { x =>
+      val y = x.asScala.toList
+      jsonObjectToMap(mapToJsonObject(Map("a" -> x))) shouldBe jsonObjectToMap(mapToJsonObject(Map("a" -> y))) 
+    }
+    "handle maps with java map items" in forAll(gen.scalarJavaMaps) { x =>
+      val y = x.asScala.toMap
+      jsonObjectToMap(mapToJsonObject(Map("a" -> x))) shouldBe jsonObjectToMap(mapToJsonObject(Map("a" -> y))) 
     }
   }
 
@@ -101,6 +118,18 @@ class ValueSupportSpec extends AbstractSpec {
       v.getType shouldBe ValueType.MAP
       jsonObjectToMap(v.getMap) shouldBe x
       valueToAny(v) shouldBe x
+    }
+    "handle java lists" in forAll(gen.scalarJavaLists) { x =>
+      val v = anyToValue(x)
+      v.getType shouldBe ValueType.ARRAY
+      jsonArrayToList(v.getArray) shouldBe x.asScala
+      valueToAny(v) shouldBe x.asScala
+    }    
+    "handle java maps" in forAll(gen.scalarJavaMaps) { x =>
+      val v = anyToValue(x)
+      v.getType shouldBe ValueType.MAP
+      jsonObjectToMap(v.getMap) shouldBe x.asScala
+      valueToAny(v) shouldBe x.asScala
     }
     "handle arbitrary types" in {
       val v = anyToValue(Some("abc"))
